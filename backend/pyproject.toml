@@ -1,0 +1,43 @@
+[project]
+name = "book-embeddings"
+version = "0.1.0"
+description = "Automated pipeline for crawling, extracting, embedding, and storing Docusaurus book content in Qdrant for RAG chatbot usage"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+    {name = "AI & Physical Robotics Book Project", email = "contact@example.com"}
+]
+keywords = ["embeddings", "qdrant", "cohere", "docusaurus", "rag", "nlp"]
+
+dependencies = [
+    "httpx>=0.25.0",              # HTTP client with async support
+    "beautifulsoup4>=4.12.0",     # HTML parsing
+    "lxml>=4.9.0",                # XML parser for BeautifulSoup
+    "cohere>=5.0.0",              # Cohere embeddings API SDK
+    "qdrant-client>=2.7.0",       # Qdrant vector database client
+    "pydantic>=2.0.0",            # Data validation and parsing
+    "pydantic-settings>=2.0.0",   # Settings management for Pydantic v2
+    "python-dotenv>=1.0.0",       # Environment variable management
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",              # Testing framework
+    "pytest-asyncio>=0.21.0",     # Async test support
+    "pytest-cov>=4.1.0",          # Coverage reporting
+    "mypy>=1.5.0",                # Static type checking
+    "pylint>=3.0.0",              # Code linting
+    "black>=23.10.0",             # Code formatting
+]
+
+[project.urls]
+Repository = "https://github.com/humanoid-robotics/ai-physical-robotics-book"
+Documentation = "https://humanoid-robotics-book.example.com"
+
+[tool.uv]
+# UV package manager configuration
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
