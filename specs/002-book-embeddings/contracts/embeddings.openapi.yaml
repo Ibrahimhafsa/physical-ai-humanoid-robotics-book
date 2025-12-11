@@ -1,0 +1,631 @@
+openapi: 3.0.0
+info:
+  title: Book Embedding Pipeline API Contracts
+  description: |
+    API contracts for the Book Embedding Pipeline feature (002-book-embeddings).
+    This document defines the interfaces between the pipeline and external services:
+    - Cohere embedding API
+    - Qdrant vector database API
+  version: 1.0.0
+  contact:
+    name: AI & Physical Robotics Book Project
+
+servers:
+  - url: https://api.cohere.ai
+    description: Cohere API
+  - url: https://[instance-name].qdrant.io
+    description: Qdrant Cloud API
+
+paths:
+  /v1/embed:
+    post:
+      summary: Generate embeddings for text chunks
+      description: |
+        Call Cohere's embed endpoint to generate 4096-dimensional embeddings for a batch of text chunks.
+
+        **Rate Limit**: 5 calls/minute (Free Tier)
+        **Token Quota**: 1M tokens/month (Free Tier)
+        **Batch Size**: Recommend max 8 texts per request for latency optimization
+      operationId: cohereEmbed
+      tags:
+        - Cohere Embeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CohereEmbedRequest'
+            examples:
+              single_batch:
+                value:
+                  texts:
+                    - "This is the first text chunk to embed"
+                    - "This is the second text chunk"
+                  model: "embed-3-large"
+                  input_type: "search_document"
+              max_batch:
+                value:
+                  texts:
+                    - "Text 1"
+                    - "Text 2"
+                    - "Text 3"
+                    - "Text 4"
+                    - "Text 5"
+                    - "Text 6"
+                    - "Text 7"
+                    - "Text 8"
+                  model: "embed-3-large"
+                  input_type: "search_document"
+      responses:
+        '200':
+          description: Embeddings generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohereEmbedResponse'
+        '400':
+          description: Bad request (invalid text format, model, or input_type)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohereErrorResponse'
+        '401':
+          description: Unauthorized (invalid or missing API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohereErrorResponse'
+        '429':
+          description: Rate limit exceeded (backoff and retry with exponential delays)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohereErrorResponse'
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before retrying
+        '500':
+          description: Internal server error (transient; retry with backoff)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CohereErrorResponse'
+      security:
+        - BearerAuth: []
+
+  /collections/{collection_name}:
+    put:
+      summary: Create or update a collection in Qdrant
+      description: |
+        Create a new vector collection in Qdrant Cloud if it does not exist.
+        If collection exists, idempotent (returns success).
+
+        **Configuration**:
+        - Vector size: 4096 (for Cohere embed-3-large)
+        - Distance metric: Cosine similarity
+        - Indexing: HNSW
+      operationId: qdrantCreateCollection
+      tags:
+        - Qdrant Vector Database
+      parameters:
+        - name: collection_name
+          in: path
+          required: true
+          description: Name of the collection (e.g., "book_embeddings")
+          schema:
+            type: string
+            example: "book_embeddings"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QdrantCreateCollectionRequest'
+            example:
+              vectors:
+                size: 4096
+                distance: "Cosine"
+              optimizers_config:
+                default_segment_number: 2
+      responses:
+        '200':
+          description: Collection created or already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantCreateCollectionResponse'
+        '400':
+          description: Bad request (invalid configuration)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '401':
+          description: Unauthorized (invalid API key)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+      security:
+        - ApiKeyAuth: []
+
+    get:
+      summary: Get collection statistics
+      description: Retrieve metadata and statistics for a collection (vector count, storage size)
+      operationId: qdrantGetCollection
+      tags:
+        - Qdrant Vector Database
+      parameters:
+        - name: collection_name
+          in: path
+          required: true
+          description: Name of the collection
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Collection information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantCollectionInfoResponse'
+        '404':
+          description: Collection not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+      security:
+        - ApiKeyAuth: []
+
+  /collections/{collection_name}/points:
+    put:
+      summary: Upsert vectors and metadata into Qdrant
+      description: |
+        Upsert (insert or update) vectors with associated metadata into the collection.
+
+        **Idempotency**: If a point with the same ID exists, it is replaced (not duplicated).
+        **Batch Size**: Recommend max 100-500 points per request for optimal performance.
+        **Metadata**: Payload can include any JSON structure (url, chunk_id, text, etc.).
+      operationId: qdrantUpsertPoints
+      tags:
+        - Qdrant Vector Database
+      parameters:
+        - name: collection_name
+          in: path
+          required: true
+          description: Name of the collection
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QdrantUpsertRequest'
+            example:
+              points:
+                - id: "abc123def456"
+                  vector: [0.1, 0.2, 0.3, ..., 0.5]
+                  payload:
+                    url: "https://example.com/docs/intro"
+                    chunk_id: "abc123def456"
+                    text: "This is the text of the chunk"
+                    section_title: "Introduction"
+                    chunk_index: 0
+                    token_count: 128
+                    embedded_at: "2025-12-12T10:30:00Z"
+                    embedding_model: "embed-3-large"
+      responses:
+        '200':
+          description: Vectors upserted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantUpsertResponse'
+        '400':
+          description: Bad request (invalid point format, vector dimension mismatch)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+      security:
+        - ApiKeyAuth: []
+
+  /collections/{collection_name}/points/search:
+    post:
+      summary: Search for similar vectors (used by chatbot)
+      description: |
+        Perform similarity search to find chunks most relevant to a query embedding.
+
+        **Distance Metric**: Cosine similarity (0.0 = orthogonal, 1.0 = identical)
+        **Typical Threshold**: similarity ≥ 0.7 for relevant results
+      operationId: qdrantSearch
+      tags:
+        - Qdrant Vector Database
+      parameters:
+        - name: collection_name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QdrantSearchRequest'
+            example:
+              vector: [0.1, 0.2, 0.3, ..., 0.5]
+              limit: 5
+              score_threshold: 0.7
+      responses:
+        '200':
+          description: Search results retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QdrantErrorResponse'
+      security:
+        - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Cohere API key in Bearer token format
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
+      description: Qdrant API key in header
+
+  schemas:
+    # Cohere Request/Response
+    CohereEmbedRequest:
+      type: object
+      required:
+        - texts
+        - model
+      properties:
+        texts:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            type: string
+            minLength: 1
+            maxLength: 2048
+          description: List of text chunks to embed (max 8-16 recommended for latency)
+        model:
+          type: string
+          enum: ["embed-3-large"]
+          default: "embed-3-large"
+          description: Embedding model to use
+        input_type:
+          type: string
+          enum: ["search_document", "search_query", "classification"]
+          default: "search_document"
+          description: Context for embeddings (document indexing vs. query search)
+        truncate:
+          type: string
+          enum: ["NONE", "START", "END"]
+          default: "END"
+          description: How to handle texts exceeding token limit (usually END = truncate from end)
+
+    CohereEmbedResponse:
+      type: object
+      required:
+        - embeddings
+        - usage
+      properties:
+        embeddings:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+              format: float
+            minItems: 4096
+            maxItems: 4096
+          description: List of embeddings (each 4096-D vector)
+        usage:
+          type: object
+          properties:
+            input_tokens:
+              type: integer
+              description: Total tokens consumed by this request
+        model:
+          type: string
+          description: Model used (echo of request)
+
+    CohereErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error description
+            type:
+              type: string
+              enum: ["invalid_request_error", "auth_error", "throttling_error", "internal_server_error"]
+              description: Error classification
+
+    # Qdrant Request/Response
+    QdrantCreateCollectionRequest:
+      type: object
+      required:
+        - vectors
+      properties:
+        vectors:
+          type: object
+          required:
+            - size
+            - distance
+          properties:
+            size:
+              type: integer
+              example: 4096
+              description: Dimension of vectors
+            distance:
+              type: string
+              enum: ["Cosine", "Euclid", "Manhattan", "Dot"]
+              example: "Cosine"
+              description: Distance metric for similarity
+        optimizers_config:
+          type: object
+          description: Optional performance tuning
+
+    QdrantCreateCollectionResponse:
+      type: object
+      properties:
+        result:
+          type: boolean
+          description: True if collection created or already exists
+        status:
+          type: string
+          enum: ["ok"]
+
+    QdrantCollectionInfoResponse:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            points_count:
+              type: integer
+              description: Total vectors in collection
+            vectors_count:
+              type: integer
+              description: Vectors indexed
+            config:
+              type: object
+              properties:
+                params:
+                  type: object
+                  properties:
+                    vectors:
+                      type: object
+                      properties:
+                        size:
+                          type: integer
+                        distance:
+                          type: string
+        status:
+          type: string
+          enum: ["ok"]
+
+    QdrantUpsertRequest:
+      type: object
+      required:
+        - points
+      properties:
+        points:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/QdrantPoint'
+        wait:
+          type: boolean
+          default: true
+          description: Wait for operation to complete before responding
+
+    QdrantPoint:
+      type: object
+      required:
+        - id
+        - vector
+        - payload
+      properties:
+        id:
+          type: string
+          description: Unique point ID (chunk_id)
+        vector:
+          type: array
+          items:
+            type: number
+            format: float
+          minItems: 4096
+          maxItems: 4096
+          description: 4096-dimensional vector
+        payload:
+          type: object
+          description: Metadata associated with vector
+          properties:
+            url:
+              type: string
+              description: Source page URL
+            chunk_id:
+              type: string
+              description: Content hash identifier
+            text:
+              type: string
+              description: Original text (for retrieval context)
+            section_title:
+              type: string
+              description: Section/heading context
+            chunk_index:
+              type: integer
+              description: Position within page
+            token_count:
+              type: integer
+              description: Token count of text
+            embedded_at:
+              type: string
+              format: date-time
+              description: When embedding was generated
+            embedding_model:
+              type: string
+              description: Model used for embedding
+
+    QdrantUpsertResponse:
+      type: object
+      properties:
+        result:
+          type: object
+          properties:
+            operation_id:
+              type: integer
+            status:
+              type: string
+              enum: ["completed"]
+        status:
+          type: string
+          enum: ["ok"]
+
+    QdrantSearchRequest:
+      type: object
+      required:
+        - vector
+        - limit
+      properties:
+        vector:
+          type: array
+          items:
+            type: number
+            format: float
+          minItems: 4096
+          maxItems: 4096
+          description: Query embedding (4096-D)
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+          description: Max results to return
+        score_threshold:
+          type: number
+          minimum: 0.0
+          maximum: 1.0
+          default: 0.7
+          description: Minimum similarity score to include in results
+        with_payload:
+          type: boolean
+          default: true
+          description: Include metadata payload in results
+
+    QdrantSearchResponse:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              score:
+                type: number
+                description: Similarity score (0.0 to 1.0)
+              payload:
+                type: object
+                description: Metadata (url, text, etc.)
+        status:
+          type: string
+          enum: ["ok"]
+
+    QdrantErrorResponse:
+      type: object
+      required:
+        - status
+        - error
+      properties:
+        status:
+          type: string
+          enum: ["error"]
+        error:
+          type: string
+          description: Error description
+
+# Error Handling & Retry Strategy
+x-error-handling:
+  cohere:
+    rate_limit_429:
+      description: Rate limit exceeded (5 calls/min)
+      strategy: exponential_backoff
+      max_retries: 3
+      initial_delay_ms: 1000
+      max_delay_ms: 60000
+      backoff_multiplier: 2.0
+    invalid_request_400:
+      description: Bad request (invalid text, model)
+      strategy: log_and_skip
+      max_retries: 0
+    auth_error_401:
+      description: Invalid API key
+      strategy: fail_fast
+      max_retries: 0
+  qdrant:
+    transient_error_500:
+      description: Temporary server error
+      strategy: exponential_backoff
+      max_retries: 3
+      initial_delay_ms: 500
+    collection_not_found_404:
+      description: Collection does not exist
+      strategy: create_and_retry
+      max_retries: 1
