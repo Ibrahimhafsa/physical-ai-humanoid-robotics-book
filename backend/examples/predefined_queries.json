@@ -1,0 +1,91 @@
+{
+  "test_queries": [
+    {
+      "id": "q1",
+      "text": "What is physical AI?",
+      "topic": "foundational",
+      "difficulty": "easy",
+      "expected_chapters": ["01-fundamentals"],
+      "notes": "Should return intro to physical AI and embodied intelligence"
+    },
+    {
+      "id": "q2",
+      "text": "Explain kinematics and dynamics in humanoid robots",
+      "topic": "mechanics",
+      "difficulty": "medium",
+      "expected_chapters": ["02-humanoid-robotics"],
+      "notes": "Should cover robot motion, forces, and control"
+    },
+    {
+      "id": "q3",
+      "text": "What are the steps to set up a ROS 2 environment?",
+      "topic": "setup",
+      "difficulty": "medium",
+      "expected_chapters": ["03-control-simulation"],
+      "notes": "Should describe ROS 2 installation and configuration"
+    },
+    {
+      "id": "q4",
+      "text": "How do you implement feedback control?",
+      "topic": "control",
+      "difficulty": "hard",
+      "expected_chapters": ["03-control-simulation"],
+      "notes": "Should explain feedback loops, PID, and control systems"
+    },
+    {
+      "id": "q5",
+      "text": "What is reinforcement learning?",
+      "topic": "learning",
+      "difficulty": "medium",
+      "expected_chapters": ["04-learning-ai"],
+      "notes": "Should explain RL concepts and robot training"
+    },
+    {
+      "id": "q6",
+      "text": "Describe the sim-to-real transfer problem",
+      "topic": "simulation",
+      "difficulty": "hard",
+      "expected_chapters": ["03-control-simulation"],
+      "notes": "Should discuss simulation vs reality differences"
+    },
+    {
+      "id": "q7",
+      "text": "How do you use Gazebo for simulation?",
+      "topic": "simulation",
+      "difficulty": "medium",
+      "expected_chapters": ["03-control-simulation"],
+      "notes": "Should cover Gazebo setup and usage for robot simulation"
+    },
+    {
+      "id": "q8",
+      "text": "What safety precautions are needed for humanoid robots?",
+      "topic": "safety",
+      "difficulty": "medium",
+      "expected_chapters": ["02-humanoid-robotics"],
+      "notes": "Should cover mechanical, electrical, and control safety"
+    },
+    {
+      "id": "q9",
+      "text": "Explain imitation learning with examples",
+      "topic": "learning",
+      "difficulty": "hard",
+      "expected_chapters": ["04-learning-ai"],
+      "notes": "Should describe learning from demonstrations"
+    },
+    {
+      "id": "q10",
+      "text": "What are the key differences between ROS 1 and ROS 2?",
+      "topic": "middleware",
+      "difficulty": "medium",
+      "expected_chapters": ["03-control-simulation"],
+      "notes": "Should compare ROS versions and improvements"
+    }
+  ],
+  "metadata": {
+    "name": "predefined_set_v1",
+    "created_at": "2025-12-12T00:00:00Z",
+    "description": "10 predefined test queries covering major book topics for retrieval validation",
+    "version": "1.0.0",
+    "author": "AI & Physical Robotics Project"
+  }
+}

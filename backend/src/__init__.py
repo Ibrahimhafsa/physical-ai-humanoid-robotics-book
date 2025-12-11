@@ -1,16 +1,15 @@
-"""Book Embedding Pipeline - Automated crawling, extraction, embedding, and storage."""
+"""
+Retrieval validation suite for RAG system.
 
-__version__ = "0.1.0"
-__author__ = "AI & Physical Robotics Book Project"
+Core modules for validating vector retrieval accuracy before RAG agent integration.
+"""
 
-from src.config import Settings, load_settings
-from src.models import Chunk, IngestionLog, Page, Vector
+from .retrieve import QueryEmbedder, QdrantRetriever, ContextExtractor
 
 __all__ = [
-    "Settings",
-    "load_settings",
-    "Page",
-    "Chunk",
-    "Vector",
-    "IngestionLog",
+    "QueryEmbedder",
+    "QdrantRetriever",
+    "ContextExtractor",
 ]
+
+__version__ = "0.1.0"
