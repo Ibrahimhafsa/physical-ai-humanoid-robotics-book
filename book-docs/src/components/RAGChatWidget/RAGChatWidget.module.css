@@ -1,0 +1,738 @@
+/**
+ * RAG Chat Widget Styles
+ * Scoped CSS Module for the chatbot widget
+ * Uses Docusaurus CSS variables for theme inheritance
+ */
+
+/* ========================================
+   Widget Container & Layout
+   ======================================== */
+
+.widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: min(100vw - 40px, 400px);
+  max-height: 80vh;
+  background: var(--ifm-color-background);
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  font-family: var(--ifm-font-family-base, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif);
+  font-size: 14px;
+  color: var(--ifm-text-color-base);
+  transition: all 0.3s ease;
+}
+
+/* Position variants */
+.widget.positionBottomLeft {
+  right: auto;
+  left: 20px;
+}
+
+.widget.positionTopRight {
+  bottom: auto;
+  top: 20px;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .widget {
+    width: calc(100vw - 20px);
+    bottom: 10px;
+    right: 10px;
+    max-height: 70vh;
+  }
+
+  .widget.positionBottomLeft {
+    left: 10px;
+  }
+
+  .widget.positionTopRight {
+    right: 10px;
+  }
+}
+
+/* Minimized state */
+.widget.minimized {
+  max-height: auto;
+}
+
+.widget.minimized .content {
+  display: none;
+}
+
+/* ========================================
+   Header
+   ======================================== */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--ifm-border-color);
+  background: var(--ifm-color-background-secondary);
+  border-radius: 12px 12px 0 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ifm-text-color-base);
+}
+
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.minimizeButton {
+  background: none;
+  border: none;
+  color: var(--ifm-text-color-base);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.minimizeButton:hover {
+  background: var(--ifm-border-color);
+}
+
+.minimizeButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   Content Area
+   ======================================== */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ========================================
+   Messages Area
+   ======================================== */
+
+.messagesArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Scrollbar styling */
+.messagesArea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messagesArea::-webkit-scrollbar-track {
+  background: var(--ifm-color-background-secondary);
+  border-radius: 3px;
+}
+
+.messagesArea::-webkit-scrollbar-thumb {
+  background: var(--ifm-border-color);
+  border-radius: 3px;
+}
+
+.messagesArea::-webkit-scrollbar-thumb:hover {
+  background: var(--ifm-color-primary);
+}
+
+/* ========================================
+   Messages
+   ======================================== */
+
+.message {
+  display: flex;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userMessage {
+  justify-content: flex-end;
+}
+
+.assistantMessage {
+  justify-content: flex-start;
+}
+
+.messageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 90%;
+  word-wrap: break-word;
+}
+
+.userMessage .messageContent {
+  background: var(--ifm-color-primary);
+  color: white;
+  padding: 10px 12px;
+  border-radius: 10px 2px 10px 10px;
+}
+
+.assistantMessage .messageContent {
+  background: var(--ifm-color-background-secondary);
+  padding: 10px 12px;
+  border-radius: 2px 10px 10px 10px;
+}
+
+.messageContent p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.timestamp {
+  font-size: 11px;
+  color: var(--ifm-text-color-secondary);
+  opacity: 0.7;
+}
+
+/* ========================================
+   Answer Box
+   ======================================== */
+
+.answerBox {
+  margin: 0;
+}
+
+.answerBox p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ========================================
+   Sources
+   ======================================== */
+
+.sourcesSection {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ifm-border-color);
+}
+
+.sourcesTitle {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ifm-text-color-base);
+}
+
+.sourcesList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sourceItem {
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--ifm-color-background);
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.sourceRank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--ifm-color-primary);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.sourceContent {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sourceTitle {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ifm-text-color-base);
+}
+
+.sourceSnippet {
+  margin: 0;
+  font-size: 12px;
+  color: var(--ifm-text-color-secondary);
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.sourceMetadata {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--ifm-text-color-secondary);
+}
+
+.relevanceScore,
+.sourceUrl {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sourceLink {
+  margin-top: 4px;
+  background: none;
+  border: none;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  font-size: 12px;
+  padding: 0;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.sourceLink:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.sourceLink:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ========================================
+   Metadata
+   ======================================== */
+
+.metadata {
+  font-size: 11px;
+  color: var(--ifm-text-color-secondary);
+  opacity: 0.7;
+  margin: 4px 0;
+}
+
+.emptySourcesNote {
+  font-size: 12px;
+  color: var(--ifm-text-color-secondary);
+  font-style: italic;
+  margin: 4px 0;
+}
+
+/* ========================================
+   Context Indicator
+   ======================================== */
+
+.contextIndicator {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+/* ========================================
+   Query Form
+   ======================================== */
+
+.queryForm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--ifm-border-color);
+  background: var(--ifm-color-background);
+}
+
+.inputContainer {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.inputField {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 6px;
+  background: var(--ifm-color-background-secondary);
+  color: var(--ifm-text-color-base);
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.inputField:focus {
+  outline: none;
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 0 0 2px rgba(var(--ifm-color-primary-rgb), 0.1);
+}
+
+.inputField:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inputField::placeholder {
+  color: var(--ifm-text-color-secondary);
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-height: 44px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--ifm-color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.submitButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(var(--ifm-color-primary-rgb), 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Loading State
+   ======================================== */
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.spinnerWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  display: inline-flex;
+  gap: 4px;
+  font-size: 16px;
+}
+
+.dot1,
+.dot2,
+.dot3 {
+  animation: bounce 1.4s infinite ease-in-out;
+  opacity: 0.6;
+}
+
+.dot2 {
+  animation-delay: 0.2s;
+}
+
+.dot3 {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.loadingMessage {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ifm-text-color-secondary);
+}
+
+.slowNetworkWarning {
+  font-size: 12px;
+  color: #d97706;
+  padding: 8px;
+  background: rgba(217, 119, 6, 0.1);
+  border-radius: 4px;
+}
+
+.elapsedTime {
+  font-size: 11px;
+  color: var(--ifm-text-color-secondary);
+  opacity: 0.5;
+}
+
+/* ========================================
+   Error State
+   ======================================== */
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(220, 38, 38, 0.05);
+  border-left: 3px solid #dc2626;
+  border-radius: 4px;
+}
+
+.errorBox {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(220, 38, 38, 0.1);
+  border-left: 3px solid #dc2626;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #991b1b;
+}
+
+.errorIcon {
+  display: inline-block;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.errorContent {
+  display: flex;
+  gap: 8px;
+}
+
+.errorTitle {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.errorMessage {
+  margin: 0;
+  font-size: 13px;
+  color: #991b1b;
+  line-height: 1.4;
+}
+
+.errorActions {
+  display: flex;
+  gap: 8px;
+}
+
+.errorButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  background: none;
+  border: 1px solid #dc2626;
+  border-radius: 4px;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.retryButton:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.dismissButton:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.errorButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.3);
+}
+
+.errorButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.troubleshootingTips {
+  font-size: 12px;
+  color: var(--ifm-text-color-secondary);
+}
+
+.tipsTitle {
+  margin: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.tipsList {
+  margin: 4px 0 0 0;
+  padding-left: 16px;
+  list-style-type: disc;
+}
+
+.tipsList li {
+  margin-bottom: 2px;
+}
+
+/* ========================================
+   Other Elements
+   ======================================== */
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--ifm-text-color-secondary);
+}
+
+.emptyMessage {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.emptySubtext {
+  margin: 0;
+  font-size: 13px;
+}
+
+.selectedTextBox {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--ifm-color-background-secondary);
+  border-left: 3px solid var(--ifm-color-primary);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.selectedTextLabel {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  color: var(--ifm-color-primary);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 4px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.clearButton:hover {
+  opacity: 0.7;
+}
+
+.clearButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.charCount {
+  font-size: 11px;
+  color: var(--ifm-text-color-secondary);
+  text-align: right;
+  opacity: 0.7;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 8px 12px;
+  border-top: 1px solid var(--ifm-border-color);
+  background: var(--ifm-color-background);
+}
+
+.footer .clearButton {
+  padding: 6px 12px;
+  border: 1px solid var(--ifm-border-color);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.footer .clearButton:hover {
+  background: var(--ifm-color-background-secondary);
+}
+
+/* ========================================
+   Print Mode
+   ======================================== */
+
+@media print {
+  .widget {
+    display: none !important;
+  }
+}
+
+/* ========================================
+   Dark Theme Overrides (explicit if needed)
+   ======================================== */
+
+.themeDark {
+  /* Override with dark-specific styles if needed */
+  /* Docusaurus handles this via CSS variables */
+}
+
+.themeLight {
+  /* Override with light-specific styles if needed */
+}
