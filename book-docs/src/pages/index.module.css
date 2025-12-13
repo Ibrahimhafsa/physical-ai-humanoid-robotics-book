@@ -1,23 +1,184 @@
 /**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
+ * Homepage Styles
+ * Features the impressive hero section with animated gradient
+ * and responsive button layout
  */
 
+/* Hero Banner - Animated Gradient Background */
 .heroBanner {
-  padding: 4rem 0;
+  padding: 100px 0 60px;
   text-align: center;
   position: relative;
   overflow: hidden;
-}
-
-@media screen and (max-width: 996px) {
-  .heroBanner {
-    padding: 2rem;
-  }
-}
-
-.buttons {
+  min-height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Hero Title - Large, bold, gradient text effect */
+.heroTitle {
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  animation: fadeInUp 0.6s ease-out 0.2s both;
+  background: linear-gradient(135deg, #ffffff 0%, #e9d5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark mode adjustments */
+[data-theme='dark'] .heroTitle {
+  background: linear-gradient(135deg, #ffffff 0%, #ddd6fe 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero Subtitle - Compelling value proposition */
+.heroSubtitle {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #e9d5ff;
+  animation: fadeInUp 0.6s ease-out 0.4s both;
+  font-weight: 500;
+}
+
+/* Hero Buttons Container */
+.heroButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+/* Primary CTA Button */
+.btnPrimaryCta {
+  display: inline-block;
+  padding: 14px 40px !important;
+  font-size: 1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+  cursor: pointer;
+}
+
+.btnPrimaryCta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%) !important;
+  text-decoration: none;
+  color: white !important;
+}
+
+.btnPrimaryCta:active {
+  transform: translateY(0);
+}
+
+/* Secondary CTA Button */
+.btnSecondaryCta {
+  display: inline-block;
+  padding: 12px 38px !important;
+  font-size: 1rem;
+  font-weight: 700;
+  background: transparent !important;
+  color: #e9d5ff !important;
+  border: 2px solid #e9d5ff !important;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btnSecondaryCta:hover {
+  background: rgba(233, 213, 255, 0.1) !important;
+  border-color: white !important;
+  color: white !important;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.btnSecondaryCta:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 60px 0 40px;
+    min-height: auto;
+  }
+
+  .heroTitle {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .heroBanner {
+    padding: 40px 20px;
+  }
+
+  .heroTitle {
+    font-size: 2.2rem;
+    margin-bottom: 16px;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .btnPrimaryCta,
+  .btnSecondaryCta {
+    width: 100%;
+    padding: 12px 24px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .heroBanner {
+    padding: 30px 16px;
+  }
+
+  .heroTitle {
+    font-size: 1.8rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.95rem;
+  }
+
+  .btnPrimaryCta,
+  .btnSecondaryCta {
+    font-size: 0.95rem;
+    padding: 10px 20px !important;
+  }
 }

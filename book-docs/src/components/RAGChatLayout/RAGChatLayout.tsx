@@ -4,7 +4,7 @@
  * This component is used in the swizzled Layout for global widget embedding
  */
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import RAGChatWidget from '../RAGChatWidget';
 import type { ReactNode } from 'react';
 
@@ -51,17 +51,14 @@ export const RAGChatLayout: React.FC<RAGChatLayoutProps> = ({
   /**
    * Get API URL from environment
    * Falls back to localhost:8000 if not configured
+   *
+   * In development mode, the .env file should set REACT_APP_API_URL.
+   * During production build, environment variables are injected by the build system.
    */
-  const apiUrl = useMemo(() => {
-    const envUrl = process.env.REACT_APP_API_URL;
-    if (!envUrl) {
-      console.warn(
-        'REACT_APP_API_URL not configured. Using default: http://localhost:8000/ask'
-      );
-      return 'http://localhost:8000/ask';
-    }
-    return envUrl;
-  }, []);
+  const apiUrl =
+    typeof window !== 'undefined' && typeof process !== 'undefined'
+      ? (process.env?.REACT_APP_API_URL ?? 'http://localhost:8000/ask')
+      : 'http://localhost:8000/ask';
 
   return (
     <>

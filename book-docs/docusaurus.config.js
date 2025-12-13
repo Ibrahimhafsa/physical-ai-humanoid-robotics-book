@@ -10,7 +10,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'AI & Physical Robotics Book',
+  title: 'AI & Humanoid Robotics TextBook',
   tagline: 'From Basics to Advanced',
   favicon: 'img/favicon.ico',
 
@@ -82,17 +82,46 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'AI & Physical Robotics Book',
+        title: 'AI & Physical Robotics',
         logo: {
           alt: 'Robotics Book Logo',
           src: 'img/logo.svg',
         },
         items: [
           {
+            type: 'dropdown',
+            label: 'Modules',
+            position: 'left',
+            items: [
+              {
+                label: '🤖 ROS 2 - Robotics Nervous System',
+                to: '/docs/humanoid-robotics/ros2-architecture',
+              },
+              {
+                label: '🎮 Digital Twin - Gazebo & Unity',
+                to: '/docs/digital-twin/simulation-fundamentals',
+              },
+              {
+                label: '🧠 NVIDIA Isaac - AI Brain',
+                to: '/docs/ai-brain/nvidia-isaac-overview',
+              },
+              {
+                label: '👁️ Vision-Language-Action',
+                to: '/docs/vla/multimodal-learning',
+              },
+            ],
+          },
+          {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Book',
+          },
+          {
+            label: 'Get Started',
+            to: '/docs/fundamentals/what-is-physical-ai',
+            position: 'left',
+            className: 'navbar-cta-button',
           },
           {
             href: 'https://github.com/ai-physical-robotics/ai-physical-robotics-book',
@@ -127,7 +156,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} AI & Physical Robotics. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} AI & Physical Robotics. Built with Docusaurus. Created by HAFSA IBRAHIM`,
       },
       prism: {
         theme: prismThemes.github,

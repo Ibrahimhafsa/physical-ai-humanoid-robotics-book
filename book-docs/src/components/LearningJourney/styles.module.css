@@ -1,0 +1,284 @@
+/* Learning Journey Component Styles */
+
+.journeySection {
+  padding: 100px 20px;
+  background: var(--ifm-background-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background accent */
+.journeySection::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 20s ease-in-out infinite;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 80px;
+  animation: fadeInDown 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+.sectionTitle {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin: 0 0 20px 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+
+.sectionSubtitle {
+  font-size: 1.15rem;
+  color: var(--ifm-text-color-secondary);
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+
+.timeline {
+  position: relative;
+  padding: 40px 0;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-lighter) 50%, var(--ifm-color-primary) 100%);
+  transform: translateX(-50%);
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+
+.timelineItem {
+  margin-bottom: 60px;
+  display: flex;
+  position: relative;
+  animation: fadeInUp 0.6s ease-out both;
+}
+
+.timelineItem:nth-child(1) { animation-delay: 0.1s; }
+.timelineItem:nth-child(2) { animation-delay: 0.2s; }
+.timelineItem:nth-child(3) { animation-delay: 0.3s; }
+.timelineItem:nth-child(4) { animation-delay: 0.4s; }
+.timelineItem:nth-child(5) { animation-delay: 0.5s; }
+
+.timelineItem.left {
+  justify-content: flex-start;
+  padding-right: 50%;
+  padding-left: 20px;
+}
+
+.timelineItem.right {
+  justify-content: flex-end;
+  padding-left: 50%;
+  padding-right: 20px;
+}
+
+.timelineMarker {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  z-index: 3;
+}
+
+.markerIcon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.4), 0 0 30px rgba(124, 58, 237, 0.2);
+  border: 4px solid var(--ifm-background-secondary);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: scaleIn 0.6s ease-out both;
+}
+
+.markerIcon:hover {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 8px 28px rgba(124, 58, 237, 0.6), 0 0 40px rgba(124, 58, 237, 0.3);
+}
+
+.timelineItem:hover .markerIcon {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 8px 28px rgba(124, 58, 237, 0.6), 0 0 40px rgba(124, 58, 237, 0.3);
+}
+
+.markerPhase {
+  font-weight: 700;
+  font-size: 13px;
+  color: white;
+  background: linear-gradient(135deg, var(--ifm-color-primary-dark) 0%, var(--ifm-color-primary) 100%);
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.timelineContent {
+  background: var(--ifm-color-background);
+  padding: 28px 32px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+}
+
+.timelineContent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.timelineContent:hover::before {
+  opacity: 1;
+}
+
+.timelineContent:hover {
+  box-shadow: 0 16px 40px rgba(124, 58, 237, 0.25), 0 0 30px rgba(124, 58, 237, 0.15);
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-4px);
+}
+
+[data-theme='dark'] .timelineContent:hover {
+  box-shadow: 0 16px 40px rgba(167, 139, 250, 0.2), 0 0 30px rgba(167, 139, 250, 0.1);
+}
+
+.stepTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease;
+}
+
+.timelineContent:hover .stepTitle {
+  color: var(--ifm-color-primary-dark);
+}
+
+.stepDescription {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--ifm-text-color-secondary);
+  line-height: 1.7;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .markerIcon {
+    width: 65px;
+    height: 65px;
+    font-size: 28px;
+  }
+
+  .timelineContent {
+    padding: 24px 28px;
+  }
+
+  .stepTitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .journeySection {
+    padding: 70px 20px;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1.05rem;
+  }
+
+  .timeline::before {
+    left: 24px;
+    width: 2px;
+  }
+
+  .timelineItem {
+    flex-direction: column;
+    margin-bottom: 50px;
+  }
+
+  .timelineItem.left,
+  .timelineItem.right {
+    padding: 0;
+    margin-left: 80px;
+    justify-content: flex-start;
+  }
+
+  .timelineMarker {
+    left: 24px;
+    flex-direction: row;
+    gap: 16px;
+    top: 0;
+  }
+
+  .markerIcon {
+    width: 56px;
+    height: 56px;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  .markerPhase {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+
+  .timelineContent {
+    padding: 20px 24px;
+    margin-top: 8px;
+  }
+
+  .stepTitle {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+  }
+
+  .stepDescription {
+    font-size: 0.95rem;
+  }
+}

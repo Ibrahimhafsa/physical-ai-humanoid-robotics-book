@@ -34,16 +34,21 @@ class RAGAgent:
     Agents API with constraint prompting to prevent hallucination.
     """
 
-    def __init__(self, api_key: str, model: str = "gpt-3.5-turbo"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-3.5-turbo"):
         """Initialize RAG agent.
 
         Args:
-            api_key: OpenAI API key
+            api_key: OpenAI API key (optional - will use None if not provided)
             model: Model to use (default gpt-3.5-turbo)
         """
-        self.client = OpenAI(api_key=api_key)
+        # OpenAI API key is optional - if not provided, agent will still work
+        # but generation will use fallback method
+        if api_key:
+            self.client = OpenAI(api_key=api_key)
+        else:
+            self.client = None
         self.model = model
-        logger.info(f"Initialized RAG agent with model {model}")
+        logger.info(f"Initialized RAG agent with model {model} (OpenAI client: {self.client is not None})")
 
     def generate_response(self, query: str, context: str, max_tokens: int = 500) -> str:
         """Generate response using OpenAI Agents SDK with context-only grounding.
@@ -66,6 +71,13 @@ class RAGAgent:
 
         if not query.strip():
             raise ValueError("Query cannot be empty")
+
+        # If OpenAI client is not available, use fallback method
+        if self.client is None:
+            logger.info("OpenAI client not configured, using context-based response")
+            # Return the context as-is - useful when using alternative LLM providers
+            # This allows the system to work with Cohere embeddings + Qdrant retrieval
+            return f"Based on the provided materials:\n\n{context[:1000]}"
 
         # Construct prompt with context
         prompt = f"""{SYSTEM_PROMPT}

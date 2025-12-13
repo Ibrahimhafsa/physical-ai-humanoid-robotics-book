@@ -445,6 +445,146 @@
 }
 
 /* ========================================
+   Submit Button Enhancement - Modern & Robotic Theme
+   ======================================== */
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.5),
+                0 4px 12px rgba(124, 58, 237, 0.3),
+                0 0 20px rgba(124, 58, 237, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.8),
+                0 4px 12px rgba(124, 58, 237, 0.5),
+                0 0 30px rgba(124, 58, 237, 0.2);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes cuteHover {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.12) rotate(-3deg);
+  }
+  50% {
+    transform: scale(1.15) rotate(3deg);
+  }
+  75% {
+    transform: scale(1.12) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes gentleGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.4),
+                0 2px 8px rgba(124, 58, 237, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.6),
+                0 2px 8px rgba(124, 58, 237, 0.3);
+  }
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  min-height: 32px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.4),
+              0 2px 8px rgba(124, 58, 237, 0.2);
+  animation: gentleGlow 2.5s ease-in-out infinite;
+}
+
+/* Shimmer overlay for cute polish */
+.submitButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -1000px;
+  width: 1000px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: none;
+}
+
+.submitButton:hover:not(:disabled)::before {
+  animation: shimmer 0.5s ease-in-out;
+}
+
+/* Cute icon styling */
+.submitButton span:first-child {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.submitButton:hover:not(:disabled) span:first-child {
+  animation: cuteHover 0.5s ease-in-out;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+  transform: translateY(-2px) scale(1.08);
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.6),
+              0 4px 12px rgba(124, 58, 237, 0.3);
+  letter-spacing: 0.3px;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0px) scale(0.96);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.4),
+              0 1px 4px rgba(124, 58, 237, 0.2);
+}
+
+.submitButton:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.3),
+              0 0 12px rgba(124, 58, 237, 0.6);
+}
+
+.submitButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  animation: none;
+  box-shadow: 0 0 6px rgba(124, 58, 237, 0.2);
+}
+
+/* Thinking state with animated icon */
+.submitButton:not(:disabled) {
+  /* Active state gets maintained glow */
+}
+
+/* ========================================
    Loading State
    ======================================== */
 

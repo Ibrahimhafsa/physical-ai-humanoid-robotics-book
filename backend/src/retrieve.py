@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class QueryEmbedder:
     """Generates embeddings for queries using Cohere API."""
 
-    def __init__(self, api_key: str, model: str = "embed-3-large", batch_size: int = 8):
+    def __init__(self, api_key: str, model: str = "embed-english-v3.0", batch_size: int = 8):
         """
         Initialize Cohere embedder.
 
@@ -55,6 +55,7 @@ class QueryEmbedder:
 
         try:
             start = time.time()
+            logger.info(f"embed_query: Using model '{self.model}' for query: {query_text[:30]}...")
             response = self.client.embed(
                 texts=[query_text],
                 model=self.model,
@@ -63,8 +64,12 @@ class QueryEmbedder:
             elapsed = time.time() - start
             logger.debug(f"Embedded query in {elapsed:.2f}s: {query_text[:50]}...")
 
+            # Handle Cohere API v2 response format
             if response.embeddings:
-                return response.embeddings[0]
+                if hasattr(response.embeddings, 'float_') and response.embeddings.float_:
+                    return response.embeddings.float_[0]
+                else:
+                    raise ValueError("No embeddings returned from Cohere")
             else:
                 raise ValueError("No embeddings returned from Cohere")
         except Exception as e:
@@ -173,22 +178,24 @@ class QdrantRetriever:
             ValueError: If query vector dimension is invalid
             Exception: If Qdrant search fails
         """
-        if len(query_vector) != 4096:
-            raise ValueError(f"Query vector must be 4096-D, got {len(query_vector)}")
+        # Support both 4096-D (embed-3-large) and 1024-D (embed-english-v3.0) vectors
+        valid_dimensions = [4096, 1024]
+        if len(query_vector) not in valid_dimensions:
+            raise ValueError(f"Query vector must be {valid_dimensions}-D, got {len(query_vector)}")
 
         try:
             start = time.time()
-            search_result = self.client.search(
+            search_result = self.client.query_points(
                 collection_name=self.collection_name,
-                query_vector=query_vector,
+                query=query_vector,
                 limit=top_k,
                 score_threshold=score_threshold
             )
             elapsed = time.time() - start
-            logger.debug(f"Searched Qdrant in {elapsed:.2f}s, found {len(search_result)} results")
+            logger.debug(f"Searched Qdrant in {elapsed:.2f}s, found {len(search_result.points)} results")
 
             results = []
-            for rank, point in enumerate(search_result, 1):
+            for rank, point in enumerate(search_result.points, 1):
                 payload = point.payload or {}
 
                 # Flag unusual scores

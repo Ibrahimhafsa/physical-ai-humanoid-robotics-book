@@ -1,0 +1,450 @@
+/* Value Proposition Component Styles - Enhanced Visual Design */
+
+.valuePropSection {
+  padding: 100px 20px;
+  background: var(--ifm-background-secondary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Animated background decoration with gradient circles */
+.backgroundDecoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.backgroundDecoration::before {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -15%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 25s ease-in-out infinite;
+}
+
+.backgroundDecoration::after {
+  content: '';
+  position: absolute;
+  top: -5%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: float 30s ease-in-out infinite reverse;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 60px;
+  animation: fadeInDown 0.6s ease-out;
+  position: relative;
+  z-index: 1;
+}
+
+.headerBadge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(167, 139, 250, 0.1) 100%);
+  color: var(--ifm-color-primary);
+  padding: 7px 18px;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  border: 1px solid var(--ifm-color-primary-lighter);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  animation: slideInDown 0.6s ease-out 0.1s both;
+}
+
+.sectionTitle {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin: 0 0 16px 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.6px;
+  animation: slideInUp 0.6s ease-out 0.2s both;
+}
+
+.sectionSubtitle {
+  font-size: 1.1rem;
+  color: var(--ifm-text-color-secondary);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  animation: slideInUp 0.6s ease-out 0.3s both;
+  font-weight: 500;
+}
+
+.propGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 28px;
+  margin-top: 60px;
+  max-width: 1300px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Enhanced Card Styling */
+.propCard {
+  background: var(--ifm-color-background);
+  padding: 32px 28px;
+  border-radius: 16px;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  animation: scaleIn 0.6s ease-out both;
+  box-shadow: 0 6px 24px rgba(124, 58, 237, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  border: 2px solid transparent;
+}
+
+/* Gradient border effect */
+.cardGradientBorder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%);
+  border-radius: 20px;
+  padding: 2px;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.propCard:hover .cardGradientBorder {
+  opacity: 1;
+}
+
+/* Background gradient overlay on hover */
+.propCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.05) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  border-radius: 20px;
+}
+
+.propCard:hover::before {
+  opacity: 1;
+}
+
+.propCard:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 24px 60px rgba(124, 58, 237, 0.3), 0 0 40px rgba(124, 58, 237, 0.2);
+  transform: translateY(-12px) scale(1.02);
+}
+
+[data-theme='dark'] .propCard:hover {
+  box-shadow: 0 24px 60px rgba(167, 139, 250, 0.25), 0 0 40px rgba(167, 139, 250, 0.15);
+}
+
+/* Proposition Badge at top of card */
+.propBadge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--ifm-color-primary) 0%, var(--ifm-color-primary-light) 100%);
+  color: white;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
+}
+
+.propCard:hover .propBadge {
+  box-shadow: 0 5px 14px rgba(124, 58, 237, 0.4);
+}
+
+/* Icon wrapper with glow effect */
+.iconWrapper {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.propIcon {
+  font-size: 3.5rem;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 3;
+  filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.15));
+}
+
+.propCard:hover .propIcon {
+  transform: scale(1.2) translateY(-8px) rotate(8deg);
+  filter: drop-shadow(0 0 25px rgba(124, 58, 237, 0.35));
+}
+
+/* Animated glow effect behind icon */
+.iconGlow {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: all 0.4s ease;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+.propCard:hover .iconGlow {
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.3) 0%, transparent 70%);
+  width: 140px;
+  height: 140px;
+}
+
+.propTitle {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+  letter-spacing: -0.2px;
+  line-height: 1.4;
+}
+
+.propCard:hover .propTitle {
+  color: var(--ifm-color-primary-dark);
+}
+
+.propDescription {
+  margin: 0 0 16px 0;
+  font-size: 0.95rem;
+  color: var(--ifm-text-color-secondary);
+  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+  flex-grow: 1;
+}
+
+/* Feature badges grid */
+.featuresList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  margin-top: 10px;
+}
+
+.featureBadge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%);
+  color: var(--ifm-color-primary);
+  padding: 4px 11px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--ifm-color-primary-lighter);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.propCard:hover .featureBadge {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.18) 0%, rgba(167, 139, 250, 0.08) 100%);
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-1px);
+}
+
+/* Keyframe animations */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 1024px) {
+  .propGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .sectionTitle {
+    font-size: 2.6rem;
+  }
+
+  .propIcon {
+    font-size: 3.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .valuePropSection {
+    padding: 70px 20px;
+  }
+
+  .sectionHeader {
+    margin-bottom: 50px;
+  }
+
+  .sectionTitle {
+    font-size: 2.2rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1.05rem;
+  }
+
+  .propGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 45px;
+  }
+
+  .propCard {
+    padding: 28px 24px;
+  }
+
+  .propIcon {
+    font-size: 3.2rem;
+  }
+
+  .propTitle {
+    font-size: 1.15rem;
+  }
+
+  .propDescription {
+    font-size: 0.9rem;
+  }
+
+  .featuresList {
+    gap: 7px;
+  }
+
+  .featureBadge {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  .headerBadge {
+    font-size: 0.75rem;
+  }
+
+  .propBadge {
+    font-size: 0.65rem;
+    padding: 4px 12px;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .valuePropSection {
+    padding: 50px 16px;
+  }
+
+  .sectionHeader {
+    margin-bottom: 35px;
+  }
+
+  .sectionTitle {
+    font-size: 1.85rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.95rem;
+  }
+
+  .propGrid {
+    gap: 16px;
+    margin-top: 35px;
+  }
+
+  .propCard {
+    padding: 24px 18px;
+  }
+
+  .propIcon {
+    font-size: 2.8rem;
+  }
+
+  .iconWrapper {
+    margin-bottom: 14px;
+  }
+
+  .propBadge {
+    font-size: 0.6rem;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+  }
+
+  .propTitle {
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+  }
+
+  .propDescription {
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+  }
+
+  .featuresList {
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .featureBadge {
+    font-size: 0.65rem;
+    padding: 3px 9px;
+  }
+}

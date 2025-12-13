@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     # Cohere Configuration
     cohere_api_key: str = Field(..., description="Cohere API key for embeddings")
     cohere_model: str = Field(
-        default="embed-3-large",
+        default="embed-english-v3.0",
         description="Cohere embedding model to use",
     )
 

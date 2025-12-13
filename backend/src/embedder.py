@@ -44,7 +44,11 @@ class CohereEmbedder:
                 texts=texts,
                 input_type="search_document",
             )
-            return response.embeddings
+            # Handle Cohere API v2 response format
+            if hasattr(response.embeddings, 'float_') and response.embeddings.float_:
+                return response.embeddings.float_
+            else:
+                raise ValueError("No embeddings returned from Cohere")
 
         embeddings = await self.retry_policy.retry_async(
             _embed,

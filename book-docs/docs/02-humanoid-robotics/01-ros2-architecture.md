@@ -2,6 +2,7 @@
 title: "ROS 2 Architecture"
 description: "Understanding the Robot Operating System 2: middleware, communication patterns, and system design"
 sidebar_position: 1
+slug: /humanoid-robotics/ros2-architecture
 tags: ["ROS 2", "architecture", "middleware"]
 module: "humanoid-robotics"
 estimated_time: "120 minutes"

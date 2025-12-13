@@ -1,3 +1,5 @@
+
+
 """
 FastAPI application for RAG Agent API.
 
@@ -69,21 +71,21 @@ async def startup_event():
 
     try:
         # Load configuration from environment
-        openai_api_key = os.getenv("OPENAI_API_KEY")
-        if not openai_api_key:
-            raise ValueError("OPENAI_API_KEY environment variable not set")
+        # Note: OpenAI API key is optional (using Cohere for embeddings instead)
+        openai_api_key = os.getenv("OPENAI_API_KEY", None)
 
         qdrant_url = os.getenv("QDRANT_URL", "http://localhost:6333")
         qdrant_api_key = os.getenv("QDRANT_API_KEY")
         qdrant_collection = os.getenv("QDRANT_COLLECTION", "book_embeddings")
         cohere_api_key = os.getenv("COHERE_API_KEY")
+        cohere_model = os.getenv("COHERE_MODEL", "embed-english-v3.0")
 
         if not cohere_api_key:
             raise ValueError("COHERE_API_KEY environment variable not set")
 
         # Initialize components
         logger.info("Initializing retrieval pipeline...")
-        embedder = QueryEmbedder(cohere_api_key)
+        embedder = QueryEmbedder(cohere_api_key, model=cohere_model)
         retriever = QdrantRetriever(qdrant_url, qdrant_api_key, qdrant_collection)
         extractor = ContextExtractor()
 

@@ -38,10 +38,16 @@ class EmbeddingPipeline:
             model=config.cohere_model,
             batch_size=config.batch_size,
         )
+        # Determine vector dimension based on embedding model
+        vector_dimension = {
+            "embed-3-large": 4096,
+            "embed-english-v3.0": 1024,
+        }.get(config.cohere_model, 1024)
         self.storage = QdrantStorage(
             url=str(config.qdrant_url),
             api_key=config.qdrant_api_key,
             collection_name=config.qdrant_collection,
+            vector_dimension=vector_dimension,
         )
         self.checkpoint = CheckpointManager(config.output_dir)
 
