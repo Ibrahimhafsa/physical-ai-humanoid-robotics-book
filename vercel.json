@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd book-docs && npm run build",
+  "outputDirectory": "book-docs/build",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/:path*/index.html"
+    }
+  ]
+}
