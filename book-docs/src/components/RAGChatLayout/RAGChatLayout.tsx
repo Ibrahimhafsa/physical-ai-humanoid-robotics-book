@@ -4,7 +4,7 @@
  * This component is used in the swizzled Layout for global widget embedding
  */
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import RAGChatWidget from '../RAGChatWidget';
 import type { ReactNode } from 'react';
 
@@ -33,8 +33,10 @@ interface RAGChatLayoutProps {
  * This replaces `src/theme/Layout/index.tsx` in the Docusaurus build.
  *
  * **Environment Configuration**:
- * The backend API URL is read from `process.env.REACT_APP_API_URL`.
- * During Docusaurus build, this environment variable is injected into the bundle.
+ * The backend API URL is determined from:
+ * 1. Window.__RAG_API_URL__ (injected by HTML template or build script)
+ * 2. process.env.REACT_APP_API_URL (build-time environment variable)
+ * 3. Fallback to development default (http://localhost:8000/ask)
  *
  * @example
  * // In src/theme/Layout/index.tsx (the swizzle point):
@@ -49,16 +51,43 @@ export const RAGChatLayout: React.FC<RAGChatLayoutProps> = ({
   children,
 }) => {
   /**
-   * Get API URL from environment
-   * Falls back to localhost:8000 if not configured
+   * Get API URL from multiple sources (in order of precedence):
+   * 1. Window.__RAG_API_URL__ - Set by Docusaurus HTML template or build process
+   * 2. process.env.REACT_APP_API_URL - Build-time environment variable
+   * 3. Fallback to localhost:8000/ask for local development
    *
-   * In development mode, the .env file should set REACT_APP_API_URL.
-   * During production build, environment variables are injected by the build system.
+   * For production deployments:
+   * - Set the API_URL environment variable during build: `API_URL=https://api.example.com/ask npm run build`
+   * - Or inject it into the HTML template dynamically before serving
+   *
+   * Console logs for debugging (only in development):
    */
-  const apiUrl =
-    typeof window !== 'undefined' && typeof process !== 'undefined'
-      ? (process.env?.REACT_APP_API_URL ?? 'http://localhost:8000/ask')
-      : 'http://localhost:8000/ask';
+  const apiUrl = useMemo(() => {
+    // Try runtime injection first (set by HTML or build script)
+    if (typeof window !== 'undefined' && (window as any).__RAG_API_URL__) {
+      const injectedUrl = (window as any).__RAG_API_URL__;
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[RAGChatWidget] Using injected API URL:', injectedUrl);
+      }
+      return injectedUrl;
+    }
+
+    // Try build-time environment variable
+    if (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) {
+      const envUrl = process.env.REACT_APP_API_URL + '/ask';
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[RAGChatWidget] Using env API URL:', envUrl);
+      }
+      return envUrl;
+    }
+
+    // Fallback for development
+    const fallbackUrl = 'http://localhost:8000/ask';
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[RAGChatWidget] Using fallback API URL:', fallbackUrl);
+    }
+    return fallbackUrl;
+  }, []);
 
   return (
     <>
