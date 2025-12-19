@@ -74,7 +74,7 @@ export const RAGChatLayout: React.FC<RAGChatLayoutProps> = ({
 
     // Try build-time environment variable
     if (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) {
-      const envUrl = process.env.REACT_APP_API_URL + '/ask';
+      const envUrl = process.env.REACT_APP_API_URL;
       if (process.env.NODE_ENV === 'development') {
         console.log('[RAGChatWidget] Using env API URL:', envUrl);
       }
@@ -82,7 +82,7 @@ export const RAGChatLayout: React.FC<RAGChatLayoutProps> = ({
     }
 
     // Fallback for development
-    const fallbackUrl = 'http://localhost:8000/ask';
+    const fallbackUrl = 'http://localhost:8000';
     if (process.env.NODE_ENV === 'development') {
       console.log('[RAGChatWidget] Using fallback API URL:', fallbackUrl);
     }
