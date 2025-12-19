@@ -376,6 +376,7 @@
   padding: 12px;
   border-top: 1px solid var(--ifm-border-color);
   background: var(--ifm-color-background);
+  pointer-events: auto;
 }
 
 .inputContainer {
@@ -394,6 +395,7 @@
   font-family: inherit;
   font-size: 14px;
   transition: border-color 0.2s;
+  pointer-events: auto;
 }
 
 .inputField:focus {
@@ -520,6 +522,7 @@
   box-shadow: 0 0 8px rgba(124, 58, 237, 0.4),
               0 2px 8px rgba(124, 58, 237, 0.2);
   animation: gentleGlow 2.5s ease-in-out infinite;
+  pointer-events: auto;
 }
 
 /* Shimmer overlay for cute polish */
