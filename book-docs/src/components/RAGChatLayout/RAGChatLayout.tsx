@@ -63,40 +63,37 @@ export const RAGChatLayout: React.FC<RAGChatLayoutProps> = ({
    * Console logs for debugging (only in development):
    */
   const apiUrl = useMemo(() => {
-    // Normalize URL to ensure /ask endpoint
-    const normalizeUrl = (url: string) => {
-      if (!url) return 'http://localhost:8000/ask';
-      // Ensure it ends with /ask
-      if (url.endsWith('/ask')) return url;
-      // Remove trailing slash if present
-      const trimmed = url.replace(/\/$/, '');
-      return `${trimmed}/ask`;
+    // Return base URL without /ask - apiClient.ts will append /ask
+    const getBaseUrl = (url: string) => {
+      if (!url) return 'http://localhost:8000';
+      // Remove /ask if present (should be added by apiClient)
+      return url.endsWith('/ask') ? url.slice(0, -4) : url;
     };
 
     // Try runtime injection first (set by HTML or build script)
     if (typeof window !== 'undefined' && (window as any).__RAG_API_URL__) {
       const injectedUrl = (window as any).__RAG_API_URL__;
-      const normalized = normalizeUrl(injectedUrl);
+      const baseUrl = getBaseUrl(injectedUrl);
       if (process.env.NODE_ENV === 'development') {
-        console.log('[RAGChatWidget] Using injected API URL:', normalized);
+        console.log('[RAGChatWidget] Using injected API base URL:', baseUrl);
       }
-      return normalized;
+      return baseUrl;
     }
 
-    // Try build-time environment variable
-    if (typeof process !== 'undefined' && process.env?.REACT_APP_API_URL) {
-      const envUrl = process.env.REACT_APP_API_URL;
-      const normalized = normalizeUrl(envUrl);
-      if (process.env.NODE_ENV === 'development') {
-        console.log('[RAGChatWidget] Using env API URL:', normalized);
+    // Try build-time environment variable (Docusaurus)
+      if (typeof process !== 'undefined' && process.env?.DOCUSAURUS_API_URL) {
+        const envUrl = process.env.DOCUSAURUS_API_URL;
+        const baseUrl = getBaseUrl(envUrl);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[RAGChatWidget] Using env API base URL:', baseUrl);
+        }
+        return baseUrl;
       }
-      return normalized;
-    }
 
     // Fallback for development
-    const fallbackUrl = 'http://localhost:8000/ask';
+    const fallbackUrl = 'http://localhost:8000';
     if (process.env.NODE_ENV === 'development') {
-      console.log('[RAGChatWidget] Using fallback API URL:', fallbackUrl);
+      console.log('[RAGChatWidget] Using fallback API base URL:', fallbackUrl);
     }
     return fallbackUrl;
   }, []);
