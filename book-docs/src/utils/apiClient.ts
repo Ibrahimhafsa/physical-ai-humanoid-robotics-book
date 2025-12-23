@@ -110,6 +110,17 @@ export async function fetchQuery(
 ): Promise<ChatResponse> {
   let lastError: Error | null = null;
 
+  // Log request details for debugging
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[RAGChatWidget] Sending query request:', {
+      apiUrl,
+      query: request.query?.substring(0, 50) + '...',
+      top_k: request.top_k,
+      similarity_threshold: request.similarity_threshold,
+      contextLength: request.context?.length ?? 0,
+    });
+  }
+
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
       // Create abort controller for timeout
@@ -120,7 +131,7 @@ export async function fetchQuery(
       );
 
       try {
-        const response = await fetch(apiUrl, {
+        const response = await fetch(`${apiUrl}/ask`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -128,6 +139,15 @@ export async function fetchQuery(
           body: JSON.stringify(request),
           signal: controller.signal,
         });
+
+        // Log response for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[RAGChatWidget] Received response:', {
+            status: response.status,
+            ok: response.ok,
+            contentType: response.headers.get('content-type'),
+          });
+        }
 
         clearTimeout(timeoutId);
 
@@ -192,6 +212,17 @@ export async function fetchQuery(
 
       // Handle network errors
       if (error instanceof TypeError) {
+        const message = error.message || 'Network error';
+
+        // Log detailed network error for debugging
+        if (process.env.NODE_ENV === 'development') {
+          console.error('[RAGChatWidget] Network error:', {
+            message,
+            apiUrl,
+            error: error.toString(),
+          });
+        }
+
         lastError = new FetchAPIError(
           'Unable to reach server. Please check your connection.',
           0,
@@ -201,6 +232,9 @@ export async function fetchQuery(
         // Retry on network error
         if (attempt < MAX_RETRIES - 1) {
           const delay = getBackoffDelay(attempt);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[RAGChatWidget] Retrying in ${delay}ms... (attempt ${attempt + 1}/${MAX_RETRIES})`);
+          }
           await sleep(delay);
         }
         continue;
