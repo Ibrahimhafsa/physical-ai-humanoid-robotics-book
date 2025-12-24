@@ -73,6 +73,19 @@ const config = {
     ],
   ],
 
+  scripts: [
+    {
+      // Inject RAG API URL into window at build time
+      // This makes the backend URL available to the browser
+      innerHTML: `
+        (function() {
+          window.__RAG_API_URL__ = '${process.env.DOCUSAURUS_API_URL || 'http://localhost:8000'}';
+          console.log('[RAG Config] API URL set to:', window.__RAG_API_URL__);
+        })();
+      `,
+    },
+  ],
+
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
