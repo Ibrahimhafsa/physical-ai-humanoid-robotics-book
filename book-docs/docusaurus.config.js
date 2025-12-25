@@ -74,14 +74,15 @@ const config = {
   ],
 
   headTags: [
-    {
-      tagName: 'script',
-      innerHTML: `
+  {
+    tagName: 'script',
+    attributes: {}, 
+    innerHTML: `
       window.__RAG_API_URL__ = "${process.env.DOCUSAURUS_API_URL || 'http://localhost:8000'}";
       console.log('[RAG CONFIG] API URL injected:', window.__RAG_API_URL__);
     `,
-    },
-  ],
+  },
+],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
