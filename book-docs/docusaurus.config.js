@@ -76,7 +76,10 @@ const config = {
   headTags: [
     {
       tagName: 'script',
-      innerHTML: `window.__RAG_API_URL__ = '${process.env.DOCUSAURUS_API_URL || 'http://localhost:8000'}'; console.log('[RAG] API URL:', window.__RAG_API_URL__);`,
+      innerHTML: `
+      window.__RAG_API_URL__ = "${process.env.DOCUSAURUS_API_URL || 'http://localhost:8000'}";
+      console.log('[RAG CONFIG] API URL injected:', window.__RAG_API_URL__);
+    `,
     },
   ],
 
