@@ -63,3 +63,4 @@ class ContextWindow(BaseModel):
     max_tokens: int = Field(default=6000)
     reserved_for_response: int = Field(default=1500)
     chunk_ordering: str = Field(default="similarity")
+    

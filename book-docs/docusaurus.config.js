@@ -162,7 +162,7 @@ const config = {
             items: [
               {
                 label: 'GitHub Repository',
-                href: 'https://github.com/ai-physical-robotics/ai-physical-robotics-book',
+                href: 'https://github.com/Ibrahimhafsa/physical-ai-humanoid-robotics-book.git',
               },
             ],
           },
